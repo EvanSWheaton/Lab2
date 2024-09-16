@@ -14,6 +14,8 @@ public:
    friend ostream& operator<< (ostream&, fraction);
    friend istream& operator>> (istream&, fraction&);
    friend fraction operator* (fraction, int);
+   fraction operator- (fraction);
+   fraction operator/ (fraction);
 
    // add more functions below
 };
@@ -33,7 +35,7 @@ ostream& operator<< (ostream& co, fraction f)
       co << f.numerator / f.denominator << " ";
       f.numerator %= f.denominator;
    }
-   if (f.numerator > 0)
+   if (f.numerator > 0 or f.numerator < 0)
       co << f.numerator << "/" << f.denominator;
    else
       co << 0;
@@ -117,6 +119,41 @@ fraction operator* (fraction left, int right)
    return right*left;
 }
 
+/*
+ * Method to subtract: fraction1 - fraction2.
+ * right: in param containing fraction2 to subtract from fraction1.
+ * Returns difference of the fractions.
+ */
+fraction fraction :: operator- (fraction right)
+{
+   fraction diff;  // difference of two fractions
+
+   // make common denominator
+   diff.denominator = denominator * right.denominator;
+
+   // find new numerators and subtract them
+   diff.numerator = numerator * (diff.denominator / denominator) -
+                   right.numerator * (diff.denominator / right.denominator);
+
+   return diff;
+}
+
+/*
+ * Method to divide: fraction1 / fraction2.
+ * right: in param containing fraction2 to divide by fraction1.
+ * Returns quotient of the fractions.
+ */
+fraction fraction :: operator/ (fraction right)
+{
+   fraction quot;  // quotient of two fractions
+
+   quot.numerator = numerator * right.denominator;
+   quot.denominator = denominator * right.numerator;
+
+   return quot;
+}
+
+
 int main() {
    fraction fract1, fract2;   // two fraction objects
 
@@ -134,6 +171,13 @@ int main() {
    cout << "fraction x fraction: " << fract1 << " x " << fract2 << " = " << fract1 * fract2 << endl;
    cout << "int x fraction : 5 x " << fract1 << " = " << 5 * fract1 << endl;
    cout << "fraction x int : " << fract1 << " x 5 = " << fract1 * 5 << endl;
+
+   // tests for subtraction
+   cout << "\nsubtractionn: " << fract1 << " - " << fract2 << " = " << fract1 - fract2 << endl;
+   cout << "subtractionn: " << fract2 << " - " << fract1 << " = " << fract2 - fract1 << endl;
+
+   // test for division
+   cout << "\ndivision: " << fract1 << " / " << fract2 << " = " << fract1 / fract2 << endl;
 
    return 0;
 }
